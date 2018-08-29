@@ -10,6 +10,17 @@ const app = express();
 const url = process.env.MONGO_HOST;
 //=========================//
 
+
+app.use(bodyParser.json({ limit: '20mb' }));
+app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "*")
+  next();
+});
+
 //====ROOT DIRECTORY===//
 app.get('/', function(req, res) {
   res.json('you did it');
@@ -26,6 +37,7 @@ app.get('/api/signatures', function(req, res) {
 
 //====POST NEW SIGNATURE===//
 app.post('/api/signatures', function(req, res) {
+  console.log("@@@@@@@@@@@@@@@@", req)
     Signature.create({
       guestSignature: req.body.SignatureOfGuest,
       message: req.body.MessageofGuest,
